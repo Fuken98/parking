@@ -28,9 +28,9 @@ Se incluyen scripts listos para inicializar la BD:
 - [`database/seed.sql`](database/seed.sql): carga datos de ejemplo.
 - [`database/user.sql`](database/user.sql): crea el usuario de base de datos.
 
-### Ejecutar scripts (Windows PowerShell/Linux/macOS)
+### Ejecutar scripts (Windows CMD/Linux/macOS)
 
-```powershell
+```bat
 mysql -u root -p < database/schema.sql
 mysql -u root -p < database/seed.sql
 mysql -u root -p < database/user.sql
