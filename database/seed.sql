@@ -17,6 +17,6 @@ INSERT INTO espacio (numero, tipo, estado) VALUES
   (3, 'MOTO', 'LIBRE'),
   (4, 'MOTO', 'LIBRE');
 
-INSERT INTO ingreso (vehiculo_id, espacio_id, fechaEntrada, fechaSalida, valorPagado) VALUES
+INSERT INTO ingreso (vehiculo_id, espacio_id, fecha_entrada, fecha_salida, valor_pagado) VALUES
   (1, 1, NOW() - INTERVAL 30 MINUTE, NULL, NULL),
   (2, 3, NOW() - INTERVAL 2 HOUR, NOW() - INTERVAL 1 HOUR, 5000);
