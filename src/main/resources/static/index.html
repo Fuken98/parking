@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parking Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <section id="login-screen" class="auth-shell">
+    <div class="auth-backdrop"></div>
+    <div class="layout auth-layout">
+      <article class="auth-brand">
+        <p class="badge">Sistema de parqueadero</p>
+        <h1>Parking Control</h1>
+        <p class="subtitle">Ingresa para continuar.</p>
+      </article>
+
+      <article class="panel auth-card">
+        <h2 class="auth-title">Iniciar sesión</h2>
+        <div id="login-alert" class="auth-alert toast error hidden" role="alert" aria-live="polite"></div>
+        <form id="login-form" class="form auth-form">
+          <label class="auth-field">
+            <span>Usuario</span>
+            <input name="username" placeholder="admin" autocomplete="username" required>
+          </label>
+          <label class="auth-field">
+            <span>Contraseña</span>
+            <input name="password" type="password" placeholder="********" autocomplete="current-password" required>
+          </label>
+          <button id="login-submit" type="submit">Entrar al panel</button>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <main id="app-shell" class="layout hidden">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <p class="badge">Sistema de parqueadero</p>
+          <h1>Parking Control</h1>
+        </div>
+        <div class="session-box">
+          <span id="session-user" class="session-user"></span>
+          <button id="logout-button" class="ghost">Cerrar sesión</button>
+        </div>
+      </div>
+      <p class="subtitle">Gestiona vehículos, espacios y movimientos en tiempo real.</p>
+    </header>
+
+    <section class="stats-grid">
+      <article class="panel stat-card">
+        <p class="stat-label">Espacios libres</p>
+        <p id="metric-libres" class="stat-value">-</p>
+      </article>
+      <article class="panel stat-card">
+        <p class="stat-label">Espacios ocupados</p>
+        <p id="metric-ocupados" class="stat-value">-</p>
+      </article>
+      <article class="panel stat-card">
+        <p class="stat-label">Ingresos activos</p>
+        <p id="metric-activos" class="stat-value">-</p>
+      </article>
+      <article class="panel stat-card">
+        <p class="stat-label">Último movimiento</p>
+        <p id="metric-ultimo" class="stat-value stat-value-sm">Sin datos</p>
+      </article>
+    </section>
+
+    <section class="panel-grid">
+      <article class="panel">
+        <h2>Registrar Vehículo</h2>
+        <form id="vehiculo-form" class="form">
+          <input name="placa" placeholder="Placa (ej: ABC123)" required>
+          <input name="color" placeholder="Color">
+          <select name="tipo" required>
+            <option value="">Tipo</option>
+            <option value="CARRO">CARRO</option>
+            <option value="MOTO">MOTO</option>
+          </select>
+          <button type="submit">Crear vehículo</button>
+        </form>
+      </article>
+
+      <article class="panel">
+        <h2>Registrar Espacio</h2>
+        <form id="espacio-form" class="form">
+          <input name="numero" type="number" min="1" placeholder="Número de espacio" required>
+          <select name="tipo" required>
+            <option value="">Tipo permitido</option>
+            <option value="CARRO">CARRO</option>
+            <option value="MOTO">MOTO</option>
+          </select>
+          <input type="hidden" name="estado" value="LIBRE">
+          <button type="submit">Crear espacio</button>
+        </form>
+      </article>
+
+      <article class="panel">
+        <h2>Ingreso / Salida</h2>
+        <form id="movimiento-form" class="form movement">
+          <input id="placa-movimiento" name="placa" placeholder="Placa" list="vehiculo-placas-list" required>
+          <datalist id="vehiculo-placas-list"></datalist>
+          <div class="actions">
+            <button type="button" data-action="entrada">Registrar entrada</button>
+            <button type="button" data-action="salida" class="outline">Registrar salida</button>
+          </div>
+        </form>
+      </article>
+    </section>
+
+    <section class="tables">
+      <article class="panel table-panel">
+        <div class="panel-head">
+          <h2>Vehículos</h2>
+          <button id="refresh-vehiculos" class="ghost">Actualizar</button>
+        </div>
+        <div class="table-controls table-controls-grid">
+          <input id="vehiculos-search" type="search" placeholder="Buscar por placa, color o tipo">
+          <select id="vehiculos-sort">
+            <option value="placa:asc">Placa ascendente</option>
+            <option value="placa:desc">Placa descendente</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Placa</th><th>Color</th><th>Tipo</th></tr>
+            </thead>
+            <tbody id="vehiculos-body"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <button id="vehiculos-prev" class="ghost" type="button">Anterior</button>
+          <span id="vehiculos-page" class="page-label">Página 1</span>
+          <button id="vehiculos-next" class="ghost" type="button">Siguiente</button>
+        </div>
+      </article>
+
+      <article class="panel table-panel">
+        <div class="panel-head">
+          <h2>Espacios</h2>
+          <button id="refresh-espacios" class="ghost">Actualizar</button>
+        </div>
+        <div class="table-controls table-controls-grid">
+          <select id="espacios-estado-filter">
+            <option value="">Todos los estados</option>
+            <option value="LIBRE">LIBRE</option>
+            <option value="OCUPADO">OCUPADO</option>
+          </select>
+          <select id="espacios-sort">
+            <option value="numero:asc">Número ↑</option>
+            <option value="numero:desc">Número ↓</option>
+            <option value="estado:asc">Estado ascendente</option>
+            <option value="estado:desc">Estado descendente</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Tipo</th><th>Estado</th></tr>
+            </thead>
+            <tbody id="espacios-body"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <button id="espacios-prev" class="ghost" type="button">Anterior</button>
+          <span id="espacios-page" class="page-label">Página 1</span>
+          <button id="espacios-next" class="ghost" type="button">Siguiente</button>
+        </div>
+      </article>
+
+      <article class="panel table-panel">
+        <div class="panel-head">
+          <h2>Movimientos</h2>
+          <button id="refresh-ingresos" class="ghost">Actualizar</button>
+        </div>
+        <div class="table-controls table-controls-grid">
+          <input id="ingresos-search" type="search" placeholder="Buscar por placa o espacio">
+          <select id="ingresos-sort">
+            <option value="fechaEntrada:desc">Entrada más reciente</option>
+            <option value="fechaEntrada:asc">Entrada más antigua</option>
+            <option value="valorPagado:desc">Valor pagado mayor</option>
+            <option value="valorPagado:asc">Valor pagado menor</option>
+            <option value="espacio:asc">Espacio ↑</option>
+            <option value="espacio:desc">Espacio ↓</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Placa</th><th>Espacio</th><th>Entrada</th><th>Salida</th><th>Valor</th></tr>
+            </thead>
+            <tbody id="ingresos-body"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <button id="ingresos-prev" class="ghost" type="button">Anterior</button>
+          <span id="ingresos-page" class="page-label">Página 1</span>
+          <button id="ingresos-next" class="ghost" type="button">Siguiente</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
