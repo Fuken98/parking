@@ -20,25 +20,25 @@ La app usa estas variables de entorno:
 | `APP_AUTH_USERNAME` | `admin` | Usuario login app |
 | `APP_AUTH_PASSWORD` | `change-me` | Password login app |
 
-## Scripts SQL (para profesor / revisión rápida)
+## Scripts SQL
 
 Se incluyen scripts listos para inicializar la BD:
 
-- [`database/01_schema.sql`](database/schema.sql): crea base de datos y tablas.
-- [`database/02_seed.sql`](database/seed.sql): carga datos de ejemplo.
+- [`database/schema.sql`](database/schema.sql): crea base de datos y tablas.
+- [`database/seed.sql`](database/seed.sql): carga datos de ejemplo.
 
 ### Ejecutar scripts (Windows PowerShell)
 
 ```powershell
-mysql -u root -p < database/01_schema.sql
-mysql -u root -p < database/02_seed.sql
+mysql -u root -p < database/schema.sql
+mysql -u root -p < database/seed.sql
 ```
 
 ### Ejecutar scripts (Linux/macOS)
 
 ```bash
-mysql -u root -p < database/01_schema.sql
-mysql -u root -p < database/02_seed.sql
+mysql -u root -p < database/schema.sql
+mysql -u root -p < database/seed.sql
 ```
 
 ## Ejecutar la app
