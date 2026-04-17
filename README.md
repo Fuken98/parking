@@ -15,8 +15,8 @@ La app usa estas variables de entorno:
 | Variable | Default | Descripción |
 |---|---|---|
 | `DB_URL` | `jdbc:mysql://127.0.0.1:3306/parking?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Bogota` | URL JDBC |
-| `DB_USERNAME` | `root` | Usuario MySQL |
-| `DB_PASSWORD` | `(vacío)` | Password MySQL |
+| `DB_USERNAME` | `parking_user` | Usuario MySQL |
+| `DB_PASSWORD` | `Parking123!` | Password MySQL |
 | `APP_AUTH_USERNAME` | `admin` | Usuario login app |
 | `APP_AUTH_PASSWORD` | `change-me` | Password login app |
 
@@ -26,19 +26,14 @@ Se incluyen scripts listos para inicializar la BD:
 
 - [`database/schema.sql`](database/schema.sql): crea base de datos y tablas.
 - [`database/seed.sql`](database/seed.sql): carga datos de ejemplo.
+- [`database/user.sql`](database/user.sql): crea el usuario de base de datos.
 
-### Ejecutar scripts (Windows PowerShell)
+### Ejecutar scripts (Windows PowerShell/Linux/macOS)
 
 ```powershell
 mysql -u root -p < database/schema.sql
 mysql -u root -p < database/seed.sql
-```
-
-### Ejecutar scripts (Linux/macOS)
-
-```bash
-mysql -u root -p < database/schema.sql
-mysql -u root -p < database/seed.sql
+mysql -u root -p < database/user.sql
 ```
 
 ## Ejecutar la app
